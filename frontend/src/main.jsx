@@ -4,6 +4,7 @@ import { ClipboardList, Database, LayoutDashboard, Plus, RefreshCw, Search, Tras
 import './styles.css'
 import './customer.css'
 import './portal.css'
+import './mobile.css'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 

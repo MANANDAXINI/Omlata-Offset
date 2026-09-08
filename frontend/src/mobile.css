@@ -1,0 +1,155 @@
+@media (max-width: 900px) {
+  .app-shell {
+    display: block;
+  }
+
+  .sidebar {
+    padding: 14px 14px 10px;
+  }
+
+  .brand {
+    padding: 0 4px 14px;
+  }
+
+  .sidebar nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    margin-top: 14px;
+  }
+
+  .sidebar nav button {
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 7px;
+    font-size: 12px;
+  }
+
+  .content {
+    padding: 22px 14px 30px;
+  }
+
+  .topbar {
+    margin-bottom: 20px;
+  }
+
+  .panel {
+    padding: 17px;
+  }
+
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .customer-page-header {
+    height: auto;
+    min-height: 68px;
+    padding: 12px 16px;
+  }
+
+  .customer-page-content {
+    padding: 22px 14px 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .brand strong {
+    letter-spacing: 2px;
+  }
+
+  .brand span {
+    font-size: 9px;
+  }
+
+  .sidebar nav {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sidebar nav button:last-child {
+    grid-column: 1 / -1;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  h2 {
+    font-size: 21px;
+  }
+
+  .panel {
+    padding: 14px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field-wide {
+    grid-column: auto;
+  }
+
+  .form-footer,
+  .customer-filters,
+  .inline-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .actions .button {
+    justify-content: center;
+  }
+
+  .search,
+  .search input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .customer-hero {
+    padding: 18px;
+  }
+
+  .customer-hero h2 {
+    font-size: 22px;
+  }
+
+  .customer-hero p:not(.eyebrow) {
+    font-size: 13px;
+  }
+
+  .stat-card {
+    padding: 15px 17px;
+  }
+
+  .customer-table-panel,
+  .table-panel {
+    margin-left: -2px;
+    margin-right: -2px;
+  }
+
+  .table-wrap {
+    margin: 0 -4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 760px;
+  }
+
+  .customer-page-header .customer-page-label {
+    display: none;
+  }
+
+  .customer-page-header .brand {
+    border: 0;
+  }
+}
