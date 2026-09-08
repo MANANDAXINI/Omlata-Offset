@@ -1,0 +1,9 @@
+backend/node_modules/
+backend/.env
+backend/generated/prisma/
+backend/.agents/
+backend/.claude/
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local

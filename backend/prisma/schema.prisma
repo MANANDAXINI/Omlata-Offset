@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Job {
+  id               Int                 @id @default(autoincrement())
+  date             DateTime
+  partyName        String
+  gsm              Int
+  paperType        String
+  quantity         Int
+  counter          Int
+  jobDetails       String
+  partyOptionId    String?
+  gsmOptionId      String?
+  paperTypeId      String?
+  counterOptionId  String?
+  sizeId           String?
+  printingSideId   String?
+  quantityOptionId String?
+  partyOption      PartyOption?        @relation(fields: [partyOptionId], references: [id], onDelete: SetNull)
+  gsmOption        GsmOption?          @relation(fields: [gsmOptionId], references: [id], onDelete: SetNull)
+  paperTypeOption  PaperType?          @relation(fields: [paperTypeId], references: [id], onDelete: SetNull)
+  counterOption    CounterOption?      @relation(fields: [counterOptionId], references: [id], onDelete: SetNull)
+  size             PaperSize?          @relation(fields: [sizeId], references: [id], onDelete: SetNull)
+  printingSide     PrintingSideOption? @relation(fields: [printingSideId], references: [id], onDelete: SetNull)
+  quantityOption   QuantityOption?     @relation(fields: [quantityOptionId], references: [id], onDelete: SetNull)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  @@index([date])
+  @@index([partyName])
+  @@index([paperType])
+}
+
+model PartyOption {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  active    Boolean  @default(true)
+  sortOrder Int      @default(0)
+  jobs      Job[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GsmOption {
+  id        String   @id @default(cuid())
+  value     Int      @unique
+  label     String   @default("")
+  active    Boolean  @default(true)
+  sortOrder Int      @default(0)
+  jobs      Job[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PaperType {
+  id         String       @id @default(cuid())
+  name       String       @unique
+  active     Boolean      @default(true)
+  sortOrder  Int          @default(0)
+  jobs       Job[]
+  priceRules PriceRule[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+model CounterOption {
+  id        String   @id @default(cuid())
+  value     Int      @unique
+  label     String   @default("")
+  active    Boolean  @default(true)
+  sortOrder Int      @default(0)
+  jobs      Job[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PaperSize {
+  id         String       @id @default(cuid())
+  name       String       @unique
+  active     Boolean      @default(true)
+  sortOrder  Int          @default(0)
+  jobs       Job[]
+  priceRules PriceRule[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+model PrintingSideOption {
+  id         String       @id @default(cuid())
+  name       String       @unique
+  active     Boolean      @default(true)
+  sortOrder  Int          @default(0)
+  jobs       Job[]
+  priceRules PriceRule[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+model QuantityOption {
+  id         String       @id @default(cuid())
+  value      Int          @unique
+  label      String       @default("")
+  active     Boolean      @default(true)
+  sortOrder  Int          @default(0)
+  jobs       Job[]
+  priceRules PriceRule[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+model PriceRule {
+  id             String             @id @default(cuid())
+  paperTypeId    String
+  sizeId         String
+  printingSideId String
+  quantityId     String
+  amount         Float              @default(0)
+  paperType      PaperType          @relation(fields: [paperTypeId], references: [id], onDelete: Cascade)
+  size           PaperSize          @relation(fields: [sizeId], references: [id], onDelete: Cascade)
+  printingSide   PrintingSideOption @relation(fields: [printingSideId], references: [id], onDelete: Cascade)
+  quantity       QuantityOption     @relation(fields: [quantityId], references: [id], onDelete: Cascade)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@unique([paperTypeId, sizeId, printingSideId, quantityId])
+}
