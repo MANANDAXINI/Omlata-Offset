@@ -154,10 +154,7 @@ app.get('/api/jobs/:id', async (request, response) => {
 
 app.post('/api/jobs', async (request, response) => {
   const data = await validateJobInput(request.body)
-  const job = await prisma.$transaction(async (tx) => {
-    const serial = await tx.recordSerial.create({ data: {} })
-    return tx.job.create({ data: { ...data, serialNumber: serial.number } })
-  })
+  const job = await prisma.job.create({ data })
   response.status(201).json(job)
 })
 
@@ -200,22 +197,18 @@ app.post('/api/bills', async (request, response) => {
   if (!Number.isFinite(settledAmount) || settledAmount < 0) throw new HttpError(400, 'Settlement amount must be zero or more')
   const totalAmount = Math.round((items.reduce((sum, item) => sum + Number(item.amount), 0) + parcelCharges) * 100) / 100
 
-  const bill = await prisma.$transaction(async (tx) => {
-    const serial = await tx.recordSerial.create({ data: {} })
-    return tx.bill.create({
-      data: {
-        serialNumber: serial.number,
-        date,
-        partyName,
-        voucherNumber: String(body.voucherNumber || '').trim(),
-        narration: String(body.narration || '').trim(),
-        parcelCharges: parcelCharges.toFixed(2),
-        settledAmount: settledAmount.toFixed(2),
-        totalAmount: totalAmount.toFixed(2),
-        items: { create: items },
-      },
-      include: { items: true },
-    })
+  const bill = await prisma.bill.create({
+    data: {
+      date,
+      partyName,
+      voucherNumber: String(body.voucherNumber || '').trim(),
+      narration: String(body.narration || '').trim(),
+      parcelCharges: parcelCharges.toFixed(2),
+      settledAmount: settledAmount.toFixed(2),
+      totalAmount: totalAmount.toFixed(2),
+      items: { create: items },
+    },
+    include: { items: true },
   })
   response.status(201).json(bill)
 })

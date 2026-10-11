@@ -7,20 +7,21 @@ const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter: new PrismaPg(pool) })
 
 async function main() {
+  await prisma.$queryRaw`SELECT setval(pg_get_serial_sequence('"Job"', 'serialNumber'), GREATEST(COALESCE(MAX("serialNumber"), 1), 1), COUNT("serialNumber") > 0) FROM "Job"`
+  await prisma.$queryRaw`SELECT setval(pg_get_serial_sequence('"Bill"', 'serialNumber'), GREATEST(COALESCE(MAX("serialNumber"), 1), 1), COUNT("serialNumber") > 0) FROM "Bill"`
+
   const jobs = await prisma.job.findMany({
     where: { serialNumber: null },
-    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+    orderBy: { id: 'asc' },
     select: { id: true },
   })
 
   for (const job of jobs) {
-    await prisma.$transaction(async (tx) => {
-      const serial = await tx.recordSerial.create({ data: {} })
-      await tx.job.update({ where: { id: job.id }, data: { serialNumber: serial.number } })
-    })
+    const [next] = await prisma.$queryRaw`SELECT nextval(pg_get_serial_sequence('"Job"', 'serialNumber')) AS serial`
+    await prisma.job.update({ where: { id: job.id }, data: { serialNumber: Number(next.serial) } })
   }
 
-  console.log(`Assigned serial numbers to ${jobs.length} existing job(s).`)
+  console.log(`Synchronized independent job and bill serials; assigned ${jobs.length} missing job serial(s).`)
 }
 
 main().catch((error) => {
