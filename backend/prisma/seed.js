@@ -23,7 +23,18 @@ async function main() {
   await seedOptions('paperType', ['ART', 'MAP', 'DUPLEX', 'BOND', 'STICKER'])
   await seedOptions('counterOption', [500, 540, 550, 1000, 1100, 1200, 1500, 2000, 3000, 4000], true)
   await seedOptions('paperSize', ['A4', 'A3', '8.5 x 11'])
-  await seedOptions('printingSideOption', ['1 SIDE', '2 SIDE', 'FRONT', 'BACK'])
+  await seedOptions('printingSideOption', ['Single Side', 'Front Back'])
+  const singleSide = await prisma.printingSideOption.findUnique({ where: { name: 'Single Side' } })
+  const frontBack = await prisma.printingSideOption.findUnique({ where: { name: 'Front Back' } })
+  const legacySides = await prisma.printingSideOption.findMany({ where: { name: { in: ['1 SIDE', '2 SIDE', 'FRONT', 'BACK'] } } })
+  for (const side of legacySides) {
+    const replacement = side.name === '1 SIDE' ? singleSide.id : frontBack.id
+    await prisma.job.updateMany({ where: { printingSideId: side.id }, data: { printingSideId: replacement } })
+  }
+  await prisma.printingSideOption.updateMany({
+    where: { name: { in: ['1 SIDE', '2 SIDE', 'FRONT', 'BACK'] } },
+    data: { active: false },
+  })
   await seedOptions('quantityOption', [1000, 2000, 3000, 4000, 9000], true)
   console.log('Omlata dropdown catalog seeded.')
 }

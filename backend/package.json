@@ -9,6 +9,7 @@
     "postinstall": "prisma generate --config prisma7.config.ts",
     "db:generate": "prisma generate --config prisma7.config.ts",
     "db:push": "prisma db push --config prisma7.config.ts",
+    "db:backfill-serials": "node scripts/backfill-serials.js",
     "db:seed": "prisma db seed --config prisma7.config.ts",
     "test": "node --check server.js"
   },
